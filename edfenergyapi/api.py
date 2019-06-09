@@ -14,7 +14,6 @@ import botocore
 import requests
 from botocore.config import Config
 
-AUTH_FILE = ".edf.json"
 COOKIES_FILE = ".edf.cookies"
 
 
@@ -112,7 +111,7 @@ class EDF(object):
             },
             headers={"Content-Type": "application/x-www-form-urlencoded"},
         )
-        edf.save()
+        self.save()
         return logged_in
 
     def request(self, url):
@@ -121,11 +120,3 @@ class EDF(object):
             # seems that we nedd to log in
             return self.login_request(url)
         return data
-
-
-if os.path.exists(AUTH_FILE):
-    with open(AUTH_FILE, "r") as f:
-        auth = json.load(f)
-    edf = EDF(**auth)
-    logger.info("Usage %s", edf.request("myaccount/energygraph/month")["data"])
-    edf.save()
